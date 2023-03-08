@@ -82,25 +82,25 @@ namespace Encryption
         }
 
         #region Encrypt
-        private static string EncryptBlock(string block, int routeNumber)
+        private static string EncryptBlock(string sourceBlock, int routeNumber)
         {
-            var convertedBlock = string.Empty;
-            for (int i = 0; i < block.Length; i++)
+            var encryptedBlock = string.Empty;
+            for (int i = 0; i < sourceBlock.Length; i++)
             {
-                convertedBlock += block[routes[routeNumber, i]];
+                encryptedBlock += sourceBlock[routes[routeNumber, i]];
             }
-            return convertedBlock;
+            return encryptedBlock;
         }
 
-        private static string EncryptRow(string row, int blockLength, int[] keys)
+        private static string EncryptRow(string sourceRow, int blockLength, int[] keys)
         {
-            var convertedRow = string.Empty;
-            var blocks = GetSubstrings(row, blockLength);
+            var encryptedRow = string.Empty;
+            var blocks = GetSubstrings(sourceRow, blockLength);
             for (int i = 0; i < blocks.Count; i++)
             {
-                convertedRow += EncryptBlock(blocks[i], keys[i % keys.Length]);
+                encryptedRow += EncryptBlock(blocks[i], keys[i % keys.Length]);
             }
-            return convertedRow;
+            return encryptedRow;
         }
 
         public static List<string> EncryptFile(List<string> sourceFile, int[] keys)
@@ -115,25 +115,25 @@ namespace Encryption
         #endregion
 
         #region Decrypt
-        private static string DecryptBlock(string block, int routeNumber)
+        private static string DecryptBlock(string encryptedBlock, int routeNumber)
         {
-            var decryptBlock = new char[block.Length];
-            for (int i = 0; i < block.Length; i++)
+            var decryptedBlock = new char[encryptedBlock.Length];
+            for (int i = 0; i < encryptedBlock.Length; i++)
             {
-                decryptBlock[routes[routeNumber, i]] = block[i];
+                decryptedBlock[routes[routeNumber, i]] = encryptedBlock[i];
             }
-            return new string(decryptBlock);
+            return new string(decryptedBlock);
         }
 
-        private static string DecryptRow(string row, int blockLength, int[] keys)
+        private static string DecryptRow(string encryptedRow, int blockLength, int[] keys)
         {
-            var convertedRow = string.Empty;
-            var blocks = GetSubstrings(row, blockLength);
+            var decryptedRow = string.Empty;
+            var blocks = GetSubstrings(encryptedRow, blockLength);
             for (int i = 0; i < blocks.Count; i++)
             {
-                convertedRow += DecryptBlock(blocks[i], keys[i % keys.Length]);
+                decryptedRow += DecryptBlock(blocks[i], keys[i % keys.Length]);
             }
-            return convertedRow;
+            return decryptedRow;
         }
 
         public static List<string> DecryptFile(List<string> encryptFile, int[] keys)
